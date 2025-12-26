@@ -1,20 +1,13 @@
-fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHyaIE0L7gkal9vJCqZD5EkdaBUTZ12vb-P1UmhVrCn8vOBVs6sJmlhgG/pub?output=csv")
-  .then(response => response.text())
-  .then(csv => {
+const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHyaIE0L7gkal9vJCqZD5EkdaBUTZ12vb-P1UmhVrCn8vOBVs6sJmlhgG/pub?output=csv";
 
+fetch(csvUrl)
+  .then(res => res.text())
+  .then(csv => {
     const lignes = csv.trim().split("\n").slice(1);
-    const accordion = document.querySelector(".accordion");
     const sections = {};
 
     lignes.forEach(ligne => {
-
-      // Nettoyage
-      ligne = ligne.replace(/\r/g, "");
-
-      // Découpe contrôlée (7 colonnes max)
-      const cols = ligne.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
-
-      if (cols.length < 7) return;
+      const cols = ligne.split(",");
 
       const titre = cols[1];
       const categorie = cols[2];
@@ -29,15 +22,15 @@ fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHy
         sections[technique] = [];
       }
 
-      sections[technique].push({ titre, annee, technique, intention, image });
+      sections[technique].push({ titre, annee, intention, image });
     });
 
-    // Création du HTML
-    Object.keys(sections).forEach(technique => {
+    const accordion = document.querySelector(".accordion");
 
-      const button = document.createElement("button");
-      button.className = "accordion-button";
-      button.textContent = technique;
+    for (const technique in sections) {
+      const btn = document.createElement("button");
+      btn.className = "accordion-button";
+      btn.textContent = technique;
 
       const content = document.createElement("div");
       content.className = "accordion-content";
@@ -48,15 +41,25 @@ fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHy
             <img src="${o.image}" alt="${o.titre}">
             <h3>${o.titre}</h3>
             <p><strong>Date :</strong> ${o.annee}</p>
-            <p><strong>Technique :</strong> ${o.technique}</p>
-            <p><strong>Intention artistique :</strong> ${o.intention}</p>
+            <p><strong>Intention :</strong> ${o.intention}</p>
           </div>
         `;
       });
 
-      accordion.appendChild(button);
-      accordion.appendChild(content);
-    });
+      accordion.append(btn, content);
+    }
 
-  })
-  .catch(err => console.error("Erreur CSV :", err));
+    // ✅ ACTIVATION DE L’ACCORDION APRÈS CRÉATION
+    initAccordion();
+  });
+
+function initAccordion() {
+  document.querySelectorAll(".accordion-button").forEach(button => {
+    button.addEventListener("click", () => {
+      button.classList.toggle("active");
+      const content = button.nextElementSibling;
+      content.style.display =
+        content.style.display === "block" ? "none" : "block";
+    });
+  });
+}
