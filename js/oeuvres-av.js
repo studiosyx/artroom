@@ -1,53 +1,43 @@
 fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHyaIE0L7gkal9vJCqZD5EkdaBUTZ12vb-P1UmhVrCn8vOBVs6sJmlhgG/pub?output=csv")
-  .then(res => res.text())
+  .then(response => response.text())
   .then(csv => {
 
-    const lignes = csv
-      .split("\n")
-      .map(l => l.trim())
-      .filter(l => l.length > 0)
-      .slice(1); // on enlève l’en-tête
-
+    const lignes = csv.trim().split("\n").slice(1);
     const accordion = document.querySelector(".accordion");
     const sections = {};
 
     lignes.forEach(ligne => {
 
-      // Nettoyage des retours chariot
+      // Nettoyage
       ligne = ligne.replace(/\r/g, "");
 
-      const cols = ligne.split(",");
+      // Découpe contrôlée (7 colonnes max)
+      const cols = ligne.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
 
-      if (cols.length < 7) {
-        console.warn("Ligne ignorée :", ligne);
-        return;
-      }
+      if (cols.length < 7) return;
 
       const titre = cols[1];
       const categorie = cols[2];
       const annee = cols[3];
       const technique = cols[4];
       const intention = cols[5];
-      const imageDrive = cols[6];
+      const image = cols[6];
 
       if (categorie !== "Arts visuels") return;
 
-      // Transformation lien Drive → image directe
-      const imageId = imageDrive.match(/\/d\/([^/]+)/);
-      if (!imageId) return;
+      if (!sections[technique]) {
+        sections[technique] = [];
+      }
 
-      const image = `https://drive.google.com/uc?id=${imageId[1]}`;
-
-      if (!sections[technique]) sections[technique] = [];
-      sections[technique].push({ titre, annee, intention, image });
+      sections[technique].push({ titre, annee, technique, intention, image });
     });
 
-    // Génération HTML
-    for (const technique in sections) {
+    // Création du HTML
+    Object.keys(sections).forEach(technique => {
 
-      const btn = document.createElement("button");
-      btn.className = "accordion-button";
-      btn.textContent = technique;
+      const button = document.createElement("button");
+      button.className = "accordion-button";
+      button.textContent = technique;
 
       const content = document.createElement("div");
       content.className = "accordion-content";
@@ -58,13 +48,15 @@ fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHy
             <img src="${o.image}" alt="${o.titre}">
             <h3>${o.titre}</h3>
             <p><strong>Date :</strong> ${o.annee}</p>
-            <p><strong>Intention :</strong> ${o.intention}</p>
+            <p><strong>Technique :</strong> ${o.technique}</p>
+            <p><strong>Intention artistique :</strong> ${o.intention}</p>
           </div>
         `;
       });
 
-      accordion.appendChild(btn);
+      accordion.appendChild(button);
       accordion.appendChild(content);
-    }
+    });
+
   })
   .catch(err => console.error("Erreur CSV :", err));
