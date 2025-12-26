@@ -1,0 +1,291 @@
+/* =========================
+   POLICE PERSONNALISÉE
+========================= */
+@font-face {
+  font-family: 'CreamCake';
+  src: url('../fonts/Cream Cake Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* =========================
+   BASE GLOBALE
+========================= */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f9f9f9;
+  color: #333;
+}
+
+/* =========================
+   HEADER (GLOBAL)
+========================= */
+header {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+header h1 {
+  font-family: 'CreamCake', sans-serif;
+  font-size: 4rem;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.logo {
+  width: 250px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* =========================
+   MAIN (GLOBAL)
+========================= */
+main {
+  padding: 1rem;
+}
+
+/* =========================
+   NAVIGATION BOUTONS (GLOBAL)
+========================= */
+.main-nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  background: #333;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  display: inline-block;
+  text-align: center;
+}
+
+/* =========================
+   IMAGE HIGHLIGHT (GLOBAL)
+========================= */
+.highlight img {
+  max-width: 300px;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
+  border-radius: 10px;
+}
+
+/* =====================================================
+   HOME (ACCUEIL) – VERSION SAFE MOBILE + DESKTOP
+===================================================== */
+body.home {
+  min-height: 100svh;          /* vrai viewport mobile */
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;            /* jamais bloqué */
+  overflow-x: hidden;
+}
+
+/* Header compact sur la home */
+body.home header {
+  padding: 1rem 1rem 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+body.home .logo {
+  width: clamp(200px, 22vw, 320px);
+  margin: 0;
+}
+
+body.home header h1 {
+  margin: 0;
+  line-height: 1;
+  font-size: clamp(2.6rem, 4.5vw, 4.6rem);
+}
+
+/* Main centré */
+body.home main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem 1rem;
+  gap: 0.8rem;
+}
+
+/* Image accueil prioritaire mais limitée */
+body.home .highlight img {
+  width: min(92vw, 480px);
+  max-height: 35svh;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+
+/* Navigation TOUJOURS visible */
+body.home .main-nav {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.7rem;
+  width: 100%;
+  max-width: 420px;
+  margin-top: 0;
+}
+
+body.home .btn {
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+/* Desktop */
+@media (min-width: 700px) {
+  body.home main {
+    justify-content: center;
+    gap: 1.2rem;
+  }
+
+  body.home .highlight img {
+    max-height: 42svh;
+  }
+
+  body.home .main-nav {
+    grid-template-columns: repeat(4, auto);
+    justify-content: center;
+    max-width: none;
+  }
+
+  body.home .btn {
+    padding: 0.85rem 1.4rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* =========================
+   ACCORDÉON
+========================= */
+.accordion-button {
+  width: 100%;
+  padding: 1rem;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  background: #eee;
+  margin-bottom: 0.2rem;
+  font-size: 1.1rem;
+  border-radius: 5px;
+}
+
+.accordion-button.active {
+  background: #ccc;
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: #f1f1f1;
+  padding-left: 1rem;
+}
+
+/* =========================
+   CARTES ŒUVRES
+========================= */
+.oeuvre {
+  background: #fff;
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.oeuvre img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.oeuvre h3 {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+}
+
+/* Images carrées dans accordéon */
+.accordion-content .oeuvre img {
+  width: 340px;
+  height: 340px;
+  object-fit: contain;
+  background: #fff;
+  padding: 5px;
+  border-radius: 6px;
+  display: block;
+}
+
+/* =========================
+   PAGE "À PROPOS"
+========================= */
+.about-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3rem;
+  max-width: 1000px;
+  margin: 2rem auto;
+  align-items: flex-start;
+}
+
+.about-image {
+  flex: 1;
+  min-width: 300px;
+}
+
+.about-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  display: block;
+}
+
+.about-text {
+  flex: 2;
+  min-width: 300px;
+}
+
+.about-text h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.about-text p {
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+/* Responsive à propos */
+@media (max-width: 768px) {
+  .about-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .about-image {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+}

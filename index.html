@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="manifest" href="/studiosyx/manifest.webmanifest">
+  <meta name="theme-color" content="#000000">
+
+  <title>Studio Syx</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="home">
+
+  <header>
+    <img src="images/logo.png" alt="Logo Studio Syx" class="logo">
+    <h1>Alyxia Collet</h1>
+  </header>
+
+  <main>
+
+    <section class="highlight">
+      <img src="images/oeuvre-accueil.jpg" alt="Œuvre à la une">
+    </section>
+
+    <nav class="main-nav">
+      <a href="arts-visuels.html" class="btn">Arts Visuels</a>
+      <a href="arts-decoratifs.html" class="btn">Arts Décoratifs</a>
+      <a href="work-in-progress.html" class="btn">Work In Progress</a>
+      <a href="a-propos.html" class="btn">À propos</a>
+    </nav>
+
+  </main>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/studiosyx/sw.js');
+    }
+  </script>
+
+</body>
+</html>
