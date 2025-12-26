@@ -1,17 +1,15 @@
-<script>
 fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHyaIE0L7gkal9vJCqZD5EkdaBUTZ12vb-P1UmhVrCn8vOBVs6sJmlhgG/pub?output=csv")
   .then(response => response.text())
-  .then(data => {
-    const lignes = data.split("\n").slice(1);
+  .then(csv => {
+    const lignes = csv.split("\n").slice(1);
     const accordion = document.querySelector(".accordion");
-    accordion.innerHTML = "";
 
-    const groupes = {};
+    const sections = {};
 
     lignes.forEach(ligne => {
-      const cols = ligne.split(",");
+      if (!ligne.trim()) return;
 
-      if (cols.length < 7) return;
+      const cols = ligne.split(",");
 
       const titre = cols[1];
       const categorie = cols[2];
@@ -22,32 +20,30 @@ fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHy
 
       if (categorie !== "Arts visuels") return;
 
-      if (!groupes[technique]) groupes[technique] = [];
-      groupes[technique].push({ titre, annee, intention, image });
+      if (!sections[technique]) sections[technique] = [];
+      sections[technique].push({ titre, annee, intention, image });
     });
 
-    for (const technique in groupes) {
-      const btn = document.createElement("button");
-      btn.className = "accordion-button";
-      btn.textContent = technique;
+    for (const technique in sections) {
+      const button = document.createElement("button");
+      button.className = "accordion-button";
+      button.textContent = technique;
 
       const content = document.createElement("div");
       content.className = "accordion-content";
 
-      groupes[technique].forEach(o => {
+      sections[technique].forEach(o => {
         content.innerHTML += `
           <div class="oeuvre">
             <img src="${o.image}" alt="${o.titre}">
             <h3>${o.titre}</h3>
             <p><strong>Date :</strong> ${o.annee}</p>
-            <p><strong>Technique :</strong> ${technique}</p>
             <p><strong>Intention artistique :</strong> ${o.intention}</p>
           </div>
         `;
       });
 
-      accordion.appendChild(btn);
-      accordion.appendChild(content);
+      accordion.append(button, content);
     }
-  });
-</script>
+  })
+  .catch(err => console.error("Erreur CSV :", err));
