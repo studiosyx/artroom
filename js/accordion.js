@@ -1,11 +1,17 @@
+// accordion.js
 function initAccordion() {
-  document.querySelectorAll(".accordion-button").forEach(btn => {
-    btn.onclick = () => {
-      btn.classList.toggle("active");
-      const content = btn.nextElementSibling;
-      content.style.maxHeight
-        ? content.style.maxHeight = null
-        : content.style.maxHeight = content.scrollHeight + "px";
-    };
+  const buttons = document.querySelectorAll('.accordion-button');
+  
+  buttons.forEach(button => {
+    button.addEventListener('click', function() {
+      this.classList.toggle('active');
+      
+      const content = this.nextElementSibling;
+      if (content.style.maxHeight) {
+        content.style.maxHeight = null;
+      } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+      }
+    });
   });
 }
