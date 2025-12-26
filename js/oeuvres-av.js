@@ -1,15 +1,16 @@
 fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHyaIE0L7gkal9vJCqZD5EkdaBUTZ12vb-P1UmhVrCn8vOBVs6sJmlhgG/pub?output=csv")
   .then(response => response.text())
   .then(csv => {
-    const lignes = csv.split("\n").slice(1);
+
+    const lignes = csv.trim().split("\n").slice(1);
     const accordion = document.querySelector(".accordion");
 
     const sections = {};
 
     lignes.forEach(ligne => {
-      if (!ligne.trim()) return;
-
-      const cols = ligne.split(",");
+      // gestion simple des virgules + guillemets
+      const cols = ligne.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g)
+        .map(c => c.replace(/^"|"$/g, "").trim());
 
       const titre = cols[1];
       const categorie = cols[2];
@@ -20,11 +21,22 @@ fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHy
 
       if (categorie !== "Arts visuels") return;
 
-      if (!sections[technique]) sections[technique] = [];
-      sections[technique].push({ titre, annee, intention, image });
+      if (!sections[technique]) {
+        sections[technique] = [];
+      }
+
+      sections[technique].push({
+        titre,
+        annee,
+        technique,
+        intention,
+        image
+      });
     });
 
+    // Génération HTML
     for (const technique in sections) {
+
       const button = document.createElement("button");
       button.className = "accordion-button";
       button.textContent = technique;
@@ -38,12 +50,14 @@ fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHy
             <img src="${o.image}" alt="${o.titre}">
             <h3>${o.titre}</h3>
             <p><strong>Date :</strong> ${o.annee}</p>
+            <p><strong>Technique :</strong> ${o.technique}</p>
             <p><strong>Intention artistique :</strong> ${o.intention}</p>
           </div>
         `;
       });
 
-      accordion.append(button, content);
+      // ORDRE CRUCIAL
+      accordion.appendChild(button);
+      accordion.appendChild(content);
     }
-  })
-  .catch(err => console.error("Erreur CSV :", err));
+  });
