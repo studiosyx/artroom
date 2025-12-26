@@ -3,14 +3,13 @@ fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHy
   .then(csv => {
     console.log("CSV chargé");
 
-    const lignes = csv.split("\n").slice(1);
-    const accordion = document.querySelector(".accordion");
+    const lignes = csv.trim().split("\n").slice(1);
+    console.log("Lignes :", lignes);
 
+    const accordion = document.querySelector(".accordion");
     const sections = {};
 
     lignes.forEach(ligne => {
-      if (!ligne.trim()) return;
-
       const cols = ligne.split(",");
 
       const titre = cols[1];
@@ -29,6 +28,7 @@ fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHy
       sections[technique].push({
         titre,
         annee,
+        technique,
         intention,
         image
       });
@@ -45,14 +45,18 @@ fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHy
       contenu.className = "accordion-content";
 
       sections[technique].forEach(o => {
-        contenu.innerHTML += `
-          <div class="oeuvre">
-            <img src="${o.image}" alt="${o.titre}">
-            <h3>${o.titre}</h3>
-            <p><strong>Date :</strong> ${o.annee}</p>
-            <p><strong>Intention artistique :</strong> ${o.intention}</p>
-          </div>
+        const div = document.createElement("div");
+        div.className = "oeuvre";
+
+        div.innerHTML = `
+          <img src="${o.image}" alt="${o.titre}">
+          <h3>${o.titre}</h3>
+          <p><strong>Date :</strong> ${o.annee}</p>
+          <p><strong>Technique :</strong> ${o.technique}</p>
+          <p><strong>Intention :</strong> ${o.intention}</p>
         `;
+
+        contenu.appendChild(div);
       });
 
       accordion.appendChild(bouton);
