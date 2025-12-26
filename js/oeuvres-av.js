@@ -2,32 +2,48 @@ fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHy
   .then(res => res.text())
   .then(csv => {
 
-    const lignes = csv.trim().split("\n");
-    const accordion = document.querySelector(".accordion");
+    const lignes = csv
+      .split("\n")
+      .map(l => l.trim())
+      .filter(l => l.length > 0)
+      .slice(1); // on enlève l’en-tête
 
+    const accordion = document.querySelector(".accordion");
     const sections = {};
 
-    lignes.forEach((ligne, index) => {
-      if (index === 0) return; // ignore l'entête si présente
+    lignes.forEach(ligne => {
+
+      // Nettoyage des retours chariot
+      ligne = ligne.replace(/\r/g, "");
 
       const cols = ligne.split(",");
 
-      if (cols.length < 7) return;
+      if (cols.length < 7) {
+        console.warn("Ligne ignorée :", ligne);
+        return;
+      }
 
       const titre = cols[1];
       const categorie = cols[2];
       const annee = cols[3];
       const technique = cols[4];
       const intention = cols[5];
-      const image = cols[6];
+      const imageDrive = cols[6];
 
       if (categorie !== "Arts visuels") return;
+
+      // Transformation lien Drive → image directe
+      const imageId = imageDrive.match(/\/d\/([^/]+)/);
+      if (!imageId) return;
+
+      const image = `https://drive.google.com/uc?id=${imageId[1]}`;
 
       if (!sections[technique]) sections[technique] = [];
       sections[technique].push({ titre, annee, intention, image });
     });
 
-    Object.keys(sections).forEach(technique => {
+    // Génération HTML
+    for (const technique in sections) {
 
       const btn = document.createElement("button");
       btn.className = "accordion-button";
@@ -37,24 +53,18 @@ fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHy
       content.className = "accordion-content";
 
       sections[technique].forEach(o => {
-        const imgUrl = driveToImg(o.image);
-
         content.innerHTML += `
           <div class="oeuvre">
-            <img src="${imgUrl}" alt="${o.titre}">
+            <img src="${o.image}" alt="${o.titre}">
             <h3>${o.titre}</h3>
             <p><strong>Date :</strong> ${o.annee}</p>
-            <p><strong>Intention artistique :</strong> ${o.intention}</p>
+            <p><strong>Intention :</strong> ${o.intention}</p>
           </div>
         `;
       });
 
       accordion.appendChild(btn);
       accordion.appendChild(content);
-    });
-  });
-
-function driveToImg(url) {
-  const id = url.match(/\/d\/(.+?)\//);
-  return id ? `https://drive.google.com/uc?export=view&id=${id[1]}` : url;
-}
+    }
+  })
+  .catch(err => console.error("Erreur CSV :", err));
