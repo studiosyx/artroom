@@ -1,7 +1,7 @@
 /* ======================================================
    CONFIG
 ====================================================== */
-const CSV_URL = "TON_LIEN_CSV_GOOGLE_SHEETS_ICI";
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHyaIE0L7gkal9vJCqZD5EkdaBUTZ12vb-P1UmhVrCn8vOBVs6sJmlhgG/pub?output=csv";
 
 /* ======================================================
    LOAD CSV
