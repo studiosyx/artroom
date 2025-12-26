@@ -1,47 +1,86 @@
-fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHyaIE0L7gkal9vJCqZD5EkdaBUTZ12vb-P1UmhVrCn8vOBVs6sJmlhgG/pub?output=csv")
-  .then(response => response.text())
-  .then(csv => {
-    const lignes = csv.trim().split("\n").slice(1);
-    const accordion = document.querySelector(".accordion");
-    const sections = {};
+/* ======================================================
+   CONFIG
+====================================================== */
+const CSV_URL = "TON_LIEN_CSV_GOOGLE_SHEETS_ICI";
 
-    lignes.forEach(ligne => {
-      const cols = ligne.split(",");
-      if (cols.length < 7) return;
+/* ======================================================
+   LOAD CSV
+====================================================== */
+Papa.parse(CSV_URL, {
+  download: true,
+  header: true,
+  skipEmptyLines: true,
+  complete: function(results) {
+    const oeuvres = results.data
+      .map(o => sanitize(o))
+      .filter(o => o.Catégorie === "Arts visuels");
 
-      const titre = cols[1];
-      const categorie = cols[2];
-      const annee = cols[3];
-      const technique = cols[4];
-      const intention = cols[5];
-      const image = cols[6];
+    renderAccordion(oeuvres);
+  },
+  error: function(err){
+    console.error("Erreur CSV", err);
+  }
+});
 
-      if (categorie !== "Arts visuels") return;
+/* ======================================================
+   SANITIZE
+====================================================== */
+function sanitize(o){
+  return {
+    Titre: (o.Titre || "").trim(),
+    Année: (o.Année || "").trim(),
+    Technique: (o.Technique || "").trim(),
+    Intention: (o.Intention || "").trim(),
+    Image: (o.Image || "").trim()
+  };
+}
 
-      if (!sections[technique]) sections[technique] = [];
-      sections[technique].push({ titre, annee, intention, image });
-    });
+/* ======================================================
+   RENDER ACCORDION
+====================================================== */
+function renderAccordion(oeuvres){
+  const container = document.querySelector(".accordion");
+  container.innerHTML = "";
 
-    Object.keys(sections).forEach(technique => {
-      const button = document.createElement("button");
-      button.className = "accordion-button";
-      button.textContent = technique;
+  const groupes = {};
 
-      const content = document.createElement("div");
-      content.className = "accordion-content";
-
-      sections[technique].forEach(o => {
-        content.innerHTML += `
-          <div class="oeuvre">
-            <img src="images/${o.image}" alt="${o.titre}">
-            <h3>${o.titre}</h3>
-            <p><strong>Date :</strong> ${o.annee}</p>
-            <p><strong>Intention :</strong> ${o.intention}</p>
-          </div>
-        `;
-      });
-
-      accordion.appendChild(button);
-      accordion.appendChild(content);
-    });
+  oeuvres.forEach(o => {
+    if (!groupes[o.Technique]) groupes[o.Technique] = [];
+    groupes[o.Technique].push(o);
   });
+
+  Object.keys(groupes).forEach(technique => {
+    const btn = document.createElement("button");
+    btn.className = "accordion-button";
+    btn.textContent = technique;
+
+    const content = document.createElement("div");
+    content.className = "accordion-content";
+
+    groupes[technique].forEach(o => {
+      content.innerHTML += `
+        <div class="oeuvre">
+          <img src="${o.Image}" alt="${o.Titre}" loading="lazy"
+               onerror="this.style.display='none'">
+          <h3>${escapeHtml(o.Titre)}</h3>
+          <p><strong>Date :</strong> ${escapeHtml(o.Année)}</p>
+          <p><strong>Intention :</strong> ${escapeHtml(o.Intention)}</p>
+        </div>
+      `;
+    });
+
+    container.appendChild(btn);
+    container.appendChild(content);
+  });
+}
+
+/* ======================================================
+   UTILS
+====================================================== */
+function escapeHtml(s){
+  return s
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;");
+}
