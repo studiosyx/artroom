@@ -1,55 +1,30 @@
-/* ======================================================
-   CONFIG
-====================================================== */
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHyaIE0L7gkal9vJCqZD5EkdaBUTZ12vb-P1UmhVrCn8vOBVs6sJmlhgG/pub?output=csv";
 
-/* ======================================================
-   LOAD CSV
-====================================================== */
 Papa.parse(CSV_URL, {
   download: true,
   header: true,
   skipEmptyLines: true,
-  complete: function(results) {
-    const oeuvres = results.data
-      .map(o => sanitize(o))
-      .filter(o => o.Catégorie === "Arts visuels");
-
-    renderAccordion(oeuvres);
-  },
-  error: function(err){
-    console.error("Erreur CSV", err);
+  complete: function (results) {
+    buildAccordion(results.data);
+    initAccordion(); // ⭐ IMPORTANT
   }
 });
 
-/* ======================================================
-   SANITIZE
-====================================================== */
-function sanitize(o){
-  return {
-    Titre: (o.Titre || "").trim(),
-    Année: (o.Année || "").trim(),
-    Technique: (o.Technique || "").trim(),
-    Intention: (o.Intention || "").trim(),
-    Image: (o.Image || "").trim()
-  };
-}
-
-/* ======================================================
-   RENDER ACCORDION
-====================================================== */
-function renderAccordion(oeuvres){
-  const container = document.querySelector(".accordion");
+function buildAccordion(data) {
+  const container = document.getElementById("accordion-av");
   container.innerHTML = "";
 
-  const groupes = {};
+  const groups = {};
 
-  oeuvres.forEach(o => {
-    if (!groupes[o.Technique]) groupes[o.Technique] = [];
-    groupes[o.Technique].push(o);
+  data.forEach(r => {
+    if (r["Catégorie"] !== "Arts visuels") return;
+
+    const tech = r["Technique"] || "Autre";
+    if (!groups[tech]) groups[tech] = [];
+    groups[tech].push(r);
   });
 
-  Object.keys(groupes).forEach(technique => {
+  Object.keys(groups).forEach(technique => {
     const btn = document.createElement("button");
     btn.className = "accordion-button";
     btn.textContent = technique;
@@ -57,28 +32,26 @@ function renderAccordion(oeuvres){
     const content = document.createElement("div");
     content.className = "accordion-content";
 
-    groupes[technique].forEach(o => {
+    groups[technique].forEach(o => {
+      const img = o["Image"] || o["Lien image"] || "";
+
       content.innerHTML += `
         <div class="oeuvre">
-          <img src="${o.Image}" alt="${o.Titre}" loading="lazy"
-               onerror="this.style.display='none'">
-          <h3>${escapeHtml(o.Titre)}</h3>
-          <p><strong>Date :</strong> ${escapeHtml(o.Année)}</p>
-          <p><strong>Intention :</strong> ${escapeHtml(o.Intention)}</p>
+          ${img ? `<img src="${img}" loading="lazy" onerror="this.style.display='none'">` : ""}
+          <h3>${escapeHtml(o["Titre"] || "")}</h3>
+          <p><strong>Date :</strong> ${escapeHtml(o["Année"] || "")}</p>
+          <p><strong>Technique :</strong> ${escapeHtml(o["Technique"] || "")}</p>
+          <p><strong>Intention :</strong> ${escapeHtml(o["Intention"] || "")}</p>
         </div>
       `;
     });
 
-    container.appendChild(btn);
-    container.appendChild(content);
+    container.append(btn, content);
   });
 }
 
-/* ======================================================
-   UTILS
-====================================================== */
 function escapeHtml(s){
-  return s
+  return (s||"")
     .replaceAll("&","&amp;")
     .replaceAll("<","&lt;")
     .replaceAll(">","&gt;")
