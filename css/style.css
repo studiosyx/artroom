@@ -63,8 +63,7 @@
 
 .oeuvre img {
   width: 100%;
-  max-width: 420px; /* clé */
-  max-height: 300px;
+  max-height: 220px;
   object-fit: contain;
 }
 
