@@ -157,6 +157,67 @@ AJUSTEMENT DESKTOP
   }
 }
 
+/* =========================
+ENTETE ACCUEIL
+========================= */
+.home-header {
+  text-align: center;
+  margin: 2rem 1rem;
+}
 
+.home-header h1 {
+  font-family: "Cream Cake", serif;
+  font-size: 3rem;
+  margin-bottom: 0.3rem;
+}
 
+.subtitle {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.4;
+}
+/* =========================
+IMAGE ACCUEIL
+========================= */
+.highlight {
+  max-width: 700px;
+  margin: 2rem auto;
+}
+
+.highlight img {
+  width: 100%;
+  max-height: 350px;
+  object-fit: contain;
+}
+/* =========================
+LEGENDE ACCUEIL
+========================= */
+figcaption {
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+/* =========================
+NAVIGATION ACCUEIL
+========================= */
+.main-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2.5rem 1rem;
+}
+
+.btn {
+  text-decoration: none;
+  color: #000;
+  border-bottom: 1px solid #000;
+  padding-bottom: 0.2rem;
+  font-size: 1rem;
+}
+
+.btn.emphasis {
+  font-weight: 600;
+}
 
