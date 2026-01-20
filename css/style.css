@@ -135,25 +135,27 @@ header h1 {
 /* =========================
 AJUSTEMENT MOBILE
 ========================= */
+@media (max-width: 900px) {
+  .highlight {
+    max-width: 90%;
+  }
+
+  .highlight img {
+    max-height: 250px;
+  }
+}
+
 @media (max-width: 600px) {
-  .oeuvre img {
-    max-width: 100%;
-    max-height: 220px;
+  .highlight img {
+    max-height: 180px;
   }
 
   header h1 {
-    font-size: 2.2rem;
+    font-size: 2rem;
   }
-}
-@media (max-width: 900px) {
-  .accordion-content.open {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 
-@media (max-width: 600px) {
-  .accordion-content.open {
-    grid-template-columns: 1fr;
+  .subtitle {
+    font-size: 0.85rem;
   }
 }
 
@@ -195,15 +197,19 @@ ENTETE ACCUEIL
 IMAGE ACCUEIL
 ========================= */
 .highlight {
-  max-width: 700px;
+  max-width: 600px; /* réduit le bloc central */
   margin: 2rem auto;
 }
 
 .highlight img {
   width: 100%;
-  max-height: 350px;
+  height: auto;
+  max-height: 350px; /* hauteur max sur desktop */
   object-fit: contain;
+  display: block;
+  margin: 0 auto;
 }
+
 /* =========================
 LEGENDE ACCUEIL
 ========================= */
