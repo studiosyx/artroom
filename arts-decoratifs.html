@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,73 +7,26 @@
   <title>Arts Décoratifs</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-  <header>
-  <h1>Arts Décoratifs</h1>
-  <!-- Ajout de la zone de texte ici -->
+<header>
+  <h1>Arts Visuels</h1>
   <p class="header-description">
-    Bienvenue dans ma galerie d'arts décoratifs. Vous trouverez ici mes différentes 
-    explorations à travers mes créations en perles, le crochet et le modelage en argile.
+    Bienvenue dans ma galerie d'arts décoratifs.
   </p>
   <a href="index.html">← Retour à l'accueil</a>
 </header>
 
-  <main>
-    <div class="accordion">
+<main>
+ <div id="accordion-av" class="accordion"></div>
+</main>
 
-  <!-- PERLES -->
-  <button class="accordion-button">Créations en perles</button>
-  <div class="accordion-content">
+<!-- ⚠️ IMPORTANT : un seul script -->
 
-    <div class="oeuvre">
-      <img src="images/ad/crocodiles_01.jpeg" alt="Titre">
-      <h3>Crocodiles</h3>
-      <p><strong>Date :</strong> 2025</p>
-      <p><strong>Technique :</strong> Tissage de perles de rocailles</p>
-      <p><strong>Intention artistique :</strong> … </p>
-    </div>
-    <div class="oeuvre">
-      <img src="images/ad/pasteque_01.jpeg" alt="Titre">
-      <h3>Pastèque</h3>
-      <p><strong>Date :</strong> 2025</p>
-      <p><strong>Technique :</strong> Tissage de perles de rocailles</p>
-      <p><strong>Intention artistique :</strong> … </p>
-    </div>
+<script src="js/papaparse.min.js"></script>
+<script src="js/oeuvres-ad.js"></script>
+<script src="js/accordion.js"></script>
 
-  </div>
 
-  <!-- CROCHET -->
-  <button class="accordion-button">Crochet</button>
-  <div class="accordion-content">
-
-    <div class="oeuvre">
-      <img src="images/ad/napperon_01.jpeg" alt="Titre">
-      <h3>Petit napperon en laine</h3>
-      <p><strong>Date :</strong> 2025</p>
-      <p><strong>Technique :</strong> Crochet</p>
-      <p><strong>Intention artistique :</strong> … </p>
-    </div>
-
-  </div>
-
-  <!-- MODELAGE EN ARGILE -->
-  <button class="accordion-button">Modelage en argile</button>
-  <div class="accordion-content">
-
-    <div class="oeuvre">
-      <img src="images/ad/maries50.jpeg" alt="Titre">
-      <h3>50 ans de mariage</h3>
-      <p><strong>Date :</strong> 2025</p>
-      <p><strong>Technique :</strong> Argile auto-durcissante</p>
-      <p><strong>Intention artistique :</strong> … </p>
-    </div>
-
-  </div>
-
-</div>
-
-  </main>
-
-  <script src="js/accordion.js"></script>
 </body>
 </html>
