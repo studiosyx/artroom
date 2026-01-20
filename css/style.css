@@ -9,7 +9,7 @@ FONTS
 }
 
 /* =========================
-GÉNÉRAL
+GLOBAL
 ========================= */
 body {
   font-family: Arial, sans-serif;
@@ -24,34 +24,40 @@ img {
 }
 
 /* =========================
-ACCUEIL
+HEADER / TITRES
+========================= */
+header h1 {
+  font-family: "Cream Cake", serif;
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 0.3rem;
+}
+
+.header-description,
+.subtitle {
+  font-size: 0.95rem;
+  color: #555;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* =========================
+PAGE D'ACCUEIL
 ========================= */
 .home-header {
   text-align: center;
   margin: 2rem 1rem;
 }
 
-.home-header h1 {
-  font-family: "Cream Cake", serif;
-  font-size: 3rem;
-  margin-bottom: 0.3rem;
-}
-
-.subtitle {
-  font-size: 0.95rem;
-  color: #555;
-  line-height: 1.4;
-}
-
 .highlight {
-  max-width: 600px;
+  max-width: 600px;       /* limite la largeur */
   margin: 2rem auto;
 }
 
 .highlight img {
   width: 100%;
   height: auto;
-  max-height: 350px;
+  max-height: 350px;      /* limite la hauteur */
   object-fit: contain;
   display: block;
   margin: 0 auto;
@@ -64,6 +70,9 @@ figcaption {
   margin-top: 0.5rem;
 }
 
+/* =========================
+NAVIGATION ACCUEIL
+========================= */
 .main-nav {
   display: flex;
   flex-wrap: wrap;
@@ -114,7 +123,6 @@ ACCORDÉON
   opacity: 0.7;
 }
 
-/* Indicateur d'ouverture */
 .accordion-header::after {
   content: "＋";
   position: absolute;
@@ -127,7 +135,6 @@ ACCORDÉON
   content: "−";
 }
 
-/* Contenu accordéon fermé / ouvert */
 .accordion-content {
   display: none;
   padding-bottom: 2rem;
@@ -168,7 +175,6 @@ CARTES OEUVRES
   line-height: 1.3;
 }
 
-/* Variante WIP */
 .oeuvre.wip img {
   max-width: 500px;
 }
@@ -181,8 +187,16 @@ CARTES OEUVRES
 /* =========================
 RESPONSIVE
 ========================= */
+@media (max-width: 900px) {
+  .accordion-content.open {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-/* Mobile petit écran */
+  .highlight {
+    max-width: 90%;
+  }
+}
+
 @media (max-width: 600px) {
   header h1 {
     font-size: 2rem;
@@ -198,28 +212,5 @@ RESPONSIVE
 
   .accordion-content.open {
     grid-template-columns: 1fr;
-  }
-}
-
-/* Tablette */
-@media (max-width: 900px) {
-  .accordion-content.open {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .highlight {
-    max-width: 90%;
-  }
-}
-
-/* Desktop */
-@media (min-width: 900px) {
-  .accordion-content {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-  }
-
-  .oeuvre {
-    max-width: 380px;
   }
 }
