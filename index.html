@@ -1,32 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="manifest" href="/studiosyx/manifest.webmanifest">
+  <meta name="theme-color" content="#000000">
+
+  <title>Portfolio Alyxia Collet</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
 <body class="home">
 
-<header class="home-header">
-  <img src="images/logo.png" alt="" class="logo small">
-  <h1>Alyxia Collet</h1>
-  <p class="subtitle">Portfolio artistique – Candidate DN MADE<br>Élève de seconde</p>
-</header>
-</header>
+  <header class="home-header">
+    <img src="images/logo.png" alt="" class="logo small">
+    <h1>Alyxia Collet</h1>
+    <p class="subtitle">Portfolio artistique – Candidate DN MADE<br>Élève de seconde</p>
+  </header>
 
   <main>
 
     <section class="highlight">
       <figure>
         <img src="images/oeuvre-accueil.jpg" alt="Œuvre sélectionnée">
-        <figcaption>
-          Extrait de recherches personnelles – dessin et expérimentation plastique
-        </figcaption>
+        <figcaption>Extrait de recherches personnelles – dessin et expérimentation plastique</figcaption>
       </figure>
     </section>
 
     <nav class="main-nav">
-      <a href="arts-visuels.html" class="btn">Arts visuels</a>
-      <a href="arts-decoratifs.html" class="btn">Arts décoratifs</a>
-      <a href="work-in-progress.html" class="btn emphasis">
-        Work in progress
-      </a>
+      <a href="arts-visuels.html" class="btn">Arts Visuels</a>
+      <a href="arts-decoratifs.html" class="btn">Arts Décoratifs</a>
+      <a href="work-in-progress.html" class="btn emphasis">Work In Progress</a>
       <a href="a-propos.html" class="btn">À propos</a>
     </nav>
 
   </main>
 
-</body>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/studiosyx/sw.js');
