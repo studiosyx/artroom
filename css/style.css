@@ -48,8 +48,12 @@
 }
 
 .accordion-content.open {
-  display: block;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  padding-bottom: 2rem;
 }
+
 /* =========================
  CARTES OEUVRES
 ========================= */
@@ -142,6 +146,18 @@ AJUSTEMENT MOBILE
     font-size: 2.2rem;
   }
 }
+@media (max-width: 900px) {
+  .accordion-content.open {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .accordion-content.open {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* =========================
 AJUSTEMENT DESKTOP
 ========================= */
