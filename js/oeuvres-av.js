@@ -1,59 +1,52 @@
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRuLLwANYSN1hibe1BuOgLEHyaIE0L7gkal9vJCqZD5EkdaBUTZ12vb-P1UmhVrCn8vOBVs6sJmlhgG/pub?output=csv";
-
-Papa.parse(CSV_URL, {
+Papa.parse("data/oeuvres-arts-visuels.csv", {
   download: true,
   header: true,
-  skipEmptyLines: true,
-  complete: function (results) {
-    buildAccordion(results.data);
-    initAccordion(); // ⭐ IMPORTANT
+  complete: function(results) {
+    genererAccordeon(results.data, "accordion-av");
   }
 });
 
-function buildAccordion(data) {
-  const container = document.getElementById("accordion-av");
-  container.innerHTML = "";
+function genererAccordeon(oeuvres, containerId) {
+  const container = document.getElementById(containerId);
+  const categories = {};
 
-  const groups = {};
-
-  data.forEach(r => {
-    if (r["Catégorie"] !== "Arts visuels") return;
-
-    const tech = r["Technique"] || "Autre";
-    if (!groups[tech]) groups[tech] = [];
-    groups[tech].push(r);
+  oeuvres.forEach(oeuvre => {
+    if (!oeuvre.categorie) return;
+    if (!categories[oeuvre.categorie]) {
+      categories[oeuvre.categorie] = [];
+    }
+    categories[oeuvre.categorie].push(oeuvre);
   });
 
-  Object.keys(groups).forEach(technique => {
-    const btn = document.createElement("button");
-    btn.className = "accordion-button";
-    btn.textContent = technique;
+  for (const categorie in categories) {
+    const section = document.createElement("section");
+    section.className = "accordion-item";
+
+    const header = document.createElement("button");
+    header.className = "accordion-header";
+    header.textContent = categorie;
 
     const content = document.createElement("div");
     content.className = "accordion-content";
 
-    groups[technique].forEach(o => {
-      const img = o["Image"] || o["Lien image"] || "";
+    categories[categorie].forEach(oeuvre => {
+      const article = document.createElement("article");
+      article.className = "oeuvre";
 
-      content.innerHTML += `
-        <div class="oeuvre">
-          ${img ? `<img src="${img}" loading="lazy" onerror="this.style.display='none'">` : ""}
-          <h3>${escapeHtml(o["Titre"] || "")}</h3>
-          <p><strong>Date :</strong> ${escapeHtml(o["Année"] || "")}</p>
-          <p><strong>Technique :</strong> ${escapeHtml(o["Technique"] || "")}</p>
-          <p><strong>Intention :</strong> ${escapeHtml(o["Intention"] || "")}</p>
-        </div>
+      article.innerHTML = `
+        <img src="${oeuvre.image}" alt="${oeuvre.titre}">
+        <h3>${oeuvre.titre} (${oeuvre.annee})</h3>
+        <p class="technique">${oeuvre.technique}</p>
+        <p class="description">${oeuvre.description}</p>
       `;
+
+      content.appendChild(article);
     });
 
-    container.append(btn, content);
-  });
-}
+    section.appendChild(header);
+    section.appendChild(content);
+    container.appendChild(section);
+  }
 
-function escapeHtml(s){
-  return (s||"")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;");
+  activerAccordeon();
 }
